@@ -1,0 +1,4 @@
+rootProject.name = 'grasp-contract-testing'
+include 'consumer'
+include 'producer'
+

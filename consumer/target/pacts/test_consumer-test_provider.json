@@ -1,0 +1,37 @@
+{
+  "provider": {
+    "name": "test_provider"
+  },
+  "consumer": {
+    "name": "test_consumer"
+  },
+  "interactions": [
+    {
+      "description": "GET request",
+      "request": {
+        "method": "GET",
+        "path": "/greeting"
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "id": 3,
+          "content": "Hello, Gaurav!"
+        }
+      },
+      "providerStates": [
+        {
+          "name": "another test state"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "3.0.0"
+    },
+    "pact-jvm": {
+      "version": "4.0.3"
+    }
+  }
+}
