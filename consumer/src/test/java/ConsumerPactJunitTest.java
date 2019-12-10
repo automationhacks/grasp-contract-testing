@@ -3,10 +3,14 @@ import au.com.dius.pact.consumer.junit.PactProviderRule;
 import au.com.dius.pact.consumer.junit.PactVerification;
 import au.com.dius.pact.core.model.RequestResponsePact;
 import au.com.dius.pact.core.model.annotations.Pact;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import model.Greeting;
 import org.intellij.lang.annotations.Language;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
+
+import java.io.IOException;
 
 public class ConsumerPactJunitTest {
 
@@ -33,11 +37,13 @@ public class ConsumerPactJunitTest {
 
     @Test
     @PactVerification
-    public void runTest() {
+    public void runTest() throws IOException {
         RestClient client = new RestClient();
         Response response = client.get("http://localhost:8080/greeting");
         String responseBody = response.getResponseBody();
 
+        Greeting greeting  = new ObjectMapper().readValue(responseBody, Greeting.class);
         Assert.assertEquals(200, response.getStatusCode());
+        Assert.assertEquals("Hello,Gaurav!", greeting.getContent());
     }
 }
