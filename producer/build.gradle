@@ -7,6 +7,13 @@ buildscript {
     }
 }
 
+plugins {
+    id "au.com.dius.pact" version "3.5.19"
+    id "com.wiredforcode.spawn" version "0.8.2"
+}
+
+import com.wiredforcode.gradle.spawn.*
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
@@ -15,9 +22,6 @@ apply plugin: 'io.spring.dependency-management'
 
 group 'blog.automationhacks.contracttesting'
 version '1.0-SNAPSHOT'
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
 
 bootJar {
     baseName = 'gs-rest-service'
@@ -29,8 +33,39 @@ repositories {
 }
 
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-web") {
+        exclude module: "spring-boot-starter-tomcat"
+    }
 
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile("org.springframework.boot:spring-boot-starter-jetty")
+    compile("org.springframework.boot:spring-boot-starter-actuator")
     testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+
+springBoot {
+    mainClassName = 'hello.Application'
+}
+
+task startProvider(type: SpawnProcessTask, dependsOn: 'assemble') {
+    command "java -jar ${jar.archivePath}"
+    ready 'Started MainApplication'
+}
+
+task stopProvider(type: KillProcessTask) {
+
+}
+
+pact {
+    serviceProviders {
+        'test_provider' {
+            port = 8080
+
+            startProviderTask = startProvider
+            terminateProviderTask = stopProvider
+
+            hasPactWith('test_consumer') {
+                pactFile = file("$buildDir/pacts/test_consumer-test_provider.json")
+            }
+        }
+    }
 }
