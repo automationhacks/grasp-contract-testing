@@ -1,10 +1,10 @@
 # Contract testing
 
-Note: producer/provider are used interchangeably
+Note: producer/provider are terms which can be used interchangeably
 
 ## Steps
 
-1. Write a consumer test against a mock with expectations of how the provider should actually behave. Re: [ConsumerPactJunitTest](file://consumer/src/test/java/ConsumerPactJunitTest.java)
+1. Write a consumer test against a mock with expectations of how the provider should actually behave. Re: [apidemo.ConsumerPactJunitTest](file://consumer/src/test/java/apidemo.ConsumerPactJunitTest.java)
 
 Use below command to run the consumer test
 ```zsh

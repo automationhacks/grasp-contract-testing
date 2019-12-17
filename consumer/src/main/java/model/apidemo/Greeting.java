@@ -1,5 +1,5 @@
 
-package model;
+package model.apidemo;
 
 
 public class Greeting {
