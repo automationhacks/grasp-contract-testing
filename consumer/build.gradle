@@ -5,12 +5,20 @@ plugins {
 group 'blog.automationhacks.contracttesting'
 version '1.0-SNAPSHOT'
 
+apply plugin: 'au.com.dius.pact'
+
 sourceCompatibility = 1.8
 
+jar {
+    archiveBaseName = 'example-consumer-greeting'
+    archiveVersion =  '1.0.0'
+}
+
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    compile group: 'au.com.dius', name: 'pact-jvm-consumer-junit', version: '4.0.3'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.1'
+    testImplementation("junit:junit")
+    testImplementation("au.com.dius:pact-jvm-consumer-junit:4.0.3")
+    testImplementation("au.com.dius:pact-jvm-consumer-java8:4.0.3")
 }
 
 test {

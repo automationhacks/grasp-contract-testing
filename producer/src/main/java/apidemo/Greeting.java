@@ -1,4 +1,4 @@
-package hello;
+package apidemo;
 
 /*
 Tut from: https://spring.io/guides/gs/rest-service/

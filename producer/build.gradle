@@ -3,19 +3,13 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.2.1.RELEASE")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.1.RELEASE")
+        classpath("au.com.dius:pact-jvm-provider-gradle:4.0.3")
     }
 }
 
-plugins {
-    id "au.com.dius.pact" version "3.5.19"
-    id "com.wiredforcode.spawn" version "0.8.2"
-}
-
-import com.wiredforcode.gradle.spawn.*
-
+apply plugin: 'au.com.dius.pact'
 apply plugin: 'java'
-apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
@@ -24,12 +18,8 @@ group 'blog.automationhacks.contracttesting'
 version '1.0-SNAPSHOT'
 
 bootJar {
-    baseName = 'gs-rest-service'
-    version =  '0.1.0'
-}
-
-repositories {
-    mavenCentral()
+    archiveBaseName = 'producer'
+    archiveVersion = '1.0-SNAPSHOT'
 }
 
 dependencies {
@@ -43,18 +33,22 @@ dependencies {
 }
 
 springBoot {
-    mainClassName = 'hello.Application'
+    mainClassName = 'apidemo.Application'
 }
 
+
+// Start application
 task startProvider(type: SpawnProcessTask, dependsOn: 'assemble') {
-    command "java -jar ${jar.archivePath}"
+    command "java -jar \u0024{jar.archivePath}"
     ready 'Started MainApplication'
 }
 
+// Task to kill the provider process
 task stopProvider(type: KillProcessTask) {
 
 }
 
+// Gradle task pactVerify to run the provider side tests
 pact {
     serviceProviders {
         'test_provider' {

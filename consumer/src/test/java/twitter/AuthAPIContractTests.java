@@ -1,10 +1,10 @@
 package twitter;
 
+import au.com.dius.pact.consumer.Pact;
+import au.com.dius.pact.consumer.PactProviderRuleMk2;
+import au.com.dius.pact.consumer.PactVerification;
 import au.com.dius.pact.consumer.dsl.PactDslWithProvider;
-import au.com.dius.pact.consumer.junit.PactProviderRule;
-import au.com.dius.pact.consumer.junit.PactVerification;
-import au.com.dius.pact.core.model.RequestResponsePact;
-import au.com.dius.pact.core.model.annotations.Pact;
+import au.com.dius.pact.model.RequestResponsePact;
 import client.Response;
 import client.RestClient;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -25,7 +25,7 @@ public class AuthAPIContractTests {
             "}";
 
     @Rule
-    public PactProviderRule mockProvider = new PactProviderRule(
+    public PactProviderRuleMk2 mockProvider = new PactProviderRuleMk2(
             "twitter_auth", "localhost", 8080, this);
 
     @Pact(consumer = "login_form")

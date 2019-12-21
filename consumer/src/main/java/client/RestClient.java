@@ -1,7 +1,5 @@
 package client;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -46,7 +44,6 @@ public class RestClient {
         return null;
     }
 
-    @NotNull
     private Response prepareResponseObj(HttpURLConnection con) throws IOException {
         Integer statusCode = con.getResponseCode();
         String response = getResponse(con);
@@ -55,7 +52,6 @@ public class RestClient {
         return new Response(statusCode, response);
     }
 
-    @NotNull
     private String getResponse(HttpURLConnection con) {
         StringBuilder response = new StringBuilder();
 
