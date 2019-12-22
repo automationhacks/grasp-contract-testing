@@ -53,25 +53,17 @@ project(':example-consumer') {
 
     pact {
         publish {
-            pactDirectory = "$rootDir/pact"
+            pactDirectory = "$rootDir/pacts"
 
-//            pactBrokerUrl = mybrokerUrl
-//            pactBrokerUsername = mybrokerUser
-//            pactBrokerPassword = mybrokerPassword
+            pactBrokerUrl = mybrokerUrl
+            pactBrokerUsername = ''
+            pactBrokerPassword = ''
 
-            // This is to local Pact Broker in Docker
+            // Update below to ensure local PACT broker is being used
             pactBrokerUrl = "http://localhost"
         }
     }
 }
-
-task copyPactToProvider(type: Copy) {
-    from "${project(':example-consumer').buildDir}/pacts"
-    into "${project(':example-provider').buildDir}/pacts"
-}
-
-task publishPact(dependsOn: [copyPactToProvider],
-        description: 'Publish the pact file to the provider projects')
 
 project(':example-provider') {
     apply plugin: 'au.com.dius.pact'
@@ -86,19 +78,19 @@ project(':example-provider') {
             ExampleProvider {
                 protocol = 'http'
                 host = 'localhost'
-                port = 8081
+                port = 8082
                 path = '/'
 
                 // Test Pacts from local provider
-                hasPactWith('example-consumer') {
-                    pactSource = file("$rootDir/pacts")
-                }
+//                hasPactWith('example-consumer') {
+//                    pactSource = file("$rootDir/pacts")
+//                }
 
                 // Test Pacts from Pact Broker
 //                hasPactsFromPactBroker(mybrokerUrl, authentication: ['Basic', mybrokerUser, mybrokerPassword])
 
                 // This is for local Pact Broker in Docker
-                //hasPactsFromPactBroker("http://localhost")
+                hasPactsFromPactBroker("http://localhost")
             }
         }
     }
