@@ -1,9 +1,9 @@
 {
   "provider": {
-    "name": "test_provider"
+    "name": "ExampleProvider"
   },
   "consumer": {
-    "name": "test_consumer"
+    "name": "JunitRuleConsumer"
   },
   "interactions": [
     {
@@ -21,7 +21,7 @@
       },
       "providerStates": [
         {
-          "name": "another test state"
+          "name": "Get greeting"
         }
       ]
     }

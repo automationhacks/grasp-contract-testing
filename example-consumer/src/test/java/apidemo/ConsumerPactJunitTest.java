@@ -1,10 +1,10 @@
 package apidemo;
 
-import au.com.dius.pact.consumer.Pact;
-import au.com.dius.pact.consumer.PactProviderRuleMk2;
-import au.com.dius.pact.consumer.PactVerification;
 import au.com.dius.pact.consumer.dsl.PactDslWithProvider;
-import au.com.dius.pact.model.RequestResponsePact;
+import au.com.dius.pact.consumer.junit.PactProviderRule;
+import au.com.dius.pact.consumer.junit.PactVerification;
+import au.com.dius.pact.core.model.RequestResponsePact;
+import au.com.dius.pact.core.model.annotations.Pact;
 import client.Response;
 import client.RestClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,10 +19,9 @@ import java.io.IOException;
 public class ConsumerPactJunitTest {
 
     @Rule
-    public PactProviderRuleMk2 mockProvider = new PactProviderRuleMk2(
-            "greetingsProvider", "localhost", 8080, this);
+    public PactProviderRule mockProvider = new PactProviderRule("ExampleProvider", "localhost", 8081, this);
 
-    @Pact(consumer = "greetingsConsumer")
+    @Pact(consumer = "JunitRuleConsumer")
     public RequestResponsePact createPact(PactDslWithProvider builder) {
         @Language("JSON") String response = "{\n" +
                 "  \"id\": 3,\n" +
@@ -44,9 +43,9 @@ public class ConsumerPactJunitTest {
     @PactVerification
     public void runTest() throws IOException {
         RestClient client = new RestClient();
-        Response response = client.get("http://localhost:8080/greeting");
+        Response response = client.get("http://localhost:8081/greeting");
         String responseBody = response.getResponseBody();
-        Greeting greeting  = new ObjectMapper().readValue(responseBody, Greeting.class);
+        Greeting greeting = new ObjectMapper().readValue(responseBody, Greeting.class);
 
         Assert.assertEquals(200, response.getStatusCode());
     }
