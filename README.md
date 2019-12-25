@@ -1,10 +1,10 @@
-# Contract testing : Beyond functional API tests
+# PACT JVM Example for sample twitter APIs
 
 ## Step 1: Write a consumer test with JUnitRule 
 
 * Write a consumer test against a mock with expectations of how the provider should behave. 
 
-Example test: `/example-consumer/src/test/java/apidemo/ConsumerPactJunitTest.java`
+Example test: `java/twitter/LoginConsumerPactTest.java`
 
 Use below command to run the consumer test
 
@@ -13,12 +13,12 @@ Use below command to run the consumer test
 ```
 
 * Step 1 would generate a .json file with the expectation of how the provider behavior should be in 
-`grasp-contract-testing/pacts` folder with the name of the consumer and provider, in this case as `JunitRuleConsumer-ExampleProvider.json`
+`grasp-contract-testing/pacts` folder with the name of the consumer and provider, in this case as `TwitterConsumer-TwitterProvider.json`
 
 ## Step 2: Define the provider API
 
-`example-provider` project creates a simple API which prints a greeting 
-Created by following steps from [spring.io](https://spring.io/guides/gs/rest-service/)
+`example-provider` project creates a simple representation of set of login APIs for a twitter like system 
+Refer to this guide to understand more about SpringBoot and how to create some simple APIs [spring.io](https://spring.io/guides/gs/rest-service/)
 
 ### How to run
 
@@ -27,34 +27,18 @@ Created by following steps from [spring.io](https://spring.io/guides/gs/rest-ser
 ./gradlew :example-provider:bootRun
 
 # Alternatively, build using below
-./gradlew build
+./gradlew :example-provider:build
 
 # and run using below:
-java -jar target/gs-rest-service-0.1.0.jar
-```
-
-if you hit a url like `http://localhost:8082/greeting`, you should see a JSON response like below:
-
-```json
-{"id":2,"content":"Hello, World!"}
-``` 
-
-Also you can pass a query param to the request and see the param printed in response:
-
-```bash
-http://localhost:8080/greeting?name=Gaurav
-```
-
-```json
-{"id":3,"content":"Hello, Gaurav!"}
+java -jar target/example-provider-1.0.0.jar
 ```
 
 You can kill the server using Ctrl + C (Mac) however this will not kill the tomcat server.
 
-To manually kill any process listening on port 8081 use below:
+To manually kill any process listening on port 8082 use below:
 
 ```bash
-kill `lsof -i -n -P | grep TCP | grep 8081 | tr -s " " "\n" | sed -n 2p`
+kill `lsof -i -n -P | grep TCP | grep 8082 | tr -s " " "\n" | sed -n 2p`
 ```
 
 ## Step 3: Start a local instance of pact broker and publish the pacts to it
@@ -77,31 +61,49 @@ Execute below to start local pact broker
 docker-compose up
 ``` 
 
+Now to publish the PACTs to the local broker run below:
 
 ```bash
-➜  grasp-contract-testing git:(master) ✗ ./gradlew :example-consumer:pactPublish
+./gradlew :example-consumer:pactPublish
+```
 
+You might see below error for the first time:
+
+```
 > Task :example-consumer:pactPublish FAILED
-Publishing 'JunitRuleConsumer-ExampleProvider.json' ... FAILED! 409 Conflict - This is the first time a pact has been published for "ExampleProvider".
-The name "ExampleProvider" is very similar to the following existing consumers/providers:
-* Example API
-If you meant to specify one of the above names, please correct the pact configuration, and re-publish the pact.
-If the pact is intended to be for a new consumer or provider, please manually create "ExampleProvider" using the following command, and then re-publish the pact:
+... 409 Conflict - This is the first time a pact has been published for "TwitterProvider".
+...
 $ curl -v -XPOST -H "Content-Type: application/json" -d "{\"name\": \"ExampleProvider\"}" http://localhost/pacticipants
 If the pact broker requires basic authentication, add '-u <username:password>' to the command.
 To disable this check, set `check_for_potential_duplicate_pacticipant_names` to false in the configuration.
 ```
 
+As suggested, lets run the below  request to create the participants
+
 ```curl
 curl -v -XPOST -H "Content-Type: application/json" -d "{\"name\": \"ExampleProvider\"}" http://localhost/pacticipants
 ```
 
-```bash
-➜  grasp-contract-testing git:(master) ✗ ./gradlew :example-consumer:pactPublish                                                                              
+And lets run this again.
 
-> Task :example-consumer:pactPublish
-Publishing 'JunitRuleConsumer-ExampleProvider.json' ... HTTP/1.1 201 Created
+```bash
+./gradlew :example-consumer:pactPublish                                                                              
 ```
+
+As you can see, the pact file is successfully published
+
+```bash
+> Task :example-consumer:pactPublish
+Publishing 'TwitterConsumer-TwitterProvider.json' ... HTTP/1.1 201 Created
+```
+
+And we can see the result by hitting the PACT broker
+
+```text
+http://localhost/
+```
+
+![](screenshots/pact_broker.png)
 
 ### Step 4 Run the pact against the provider
 
@@ -114,6 +116,8 @@ Ensure the provider API is up and running. Using `./gradlew :example-provider:bo
 ```zsh
  ./gradlew :example-provider:pactVerify
 ```
+
+And you should see the same contract being exercised against the provider service
 
 ## Summarizing
 

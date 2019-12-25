@@ -44,7 +44,7 @@ project(':example-consumer') {
 
     jar {
         archiveBaseName = 'example-consumer'
-        archiveVersion =  '1.0.0'
+        archiveVersion = '1.0.0'
     }
 
     test {
@@ -70,31 +70,21 @@ project(':example-provider') {
 
     jar {
         archiveBaseName = 'example-provider'
-        archiveVersion =  '1.0.0'
+        archiveVersion = '1.0.0'
     }
 
     pact {
         serviceProviders {
-            ExampleProvider {
+            TwitterProvider {
                 protocol = 'http'
                 host = 'localhost'
                 port = 8082
-                path = '/'
+                path = ''
 
-                // Test Pacts from local provider
-//                hasPactWith('example-consumer') {
-//                    pactSource = file("$rootDir/pacts")
-//                }
-
-                // Test Pacts from Pact Broker
-//                hasPactsFromPactBroker(mybrokerUrl, authentication: ['Basic', mybrokerUser, mybrokerPassword])
-
-                // This is for local Pact Broker in Docker
                 hasPactsFromPactBroker("http://localhost")
             }
         }
+
     }
-
 }
-
 
