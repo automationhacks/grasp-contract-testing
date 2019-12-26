@@ -1,5 +1,5 @@
 
-package twitter.login;
+package twitter.datamodels.login;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

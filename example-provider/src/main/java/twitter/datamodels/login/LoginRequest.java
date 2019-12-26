@@ -1,15 +1,15 @@
-package twitter.login;
+package twitter.datamodels.login;
 
 
-public class LoginDTO {
+public class LoginRequest {
 
     private String password;
     private String username;
 
-    public LoginDTO() {
+    public LoginRequest() {
     }
 
-    public LoginDTO(String password, String username) {
+    public LoginRequest(String password, String username) {
         this.password = password;
         this.username = username;
     }
