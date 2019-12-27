@@ -55,11 +55,10 @@ project(':example-consumer') {
         publish {
             pactDirectory = "$rootDir/pacts"
 
+            // Update below to ensure local PACT broker is being used
             pactBrokerUrl = mybrokerUrl
             pactBrokerUsername = ''
             pactBrokerPassword = ''
-
-            // Update below to ensure local PACT broker is being used
             pactBrokerUrl = "http://localhost"
         }
     }

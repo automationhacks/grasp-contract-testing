@@ -51,4 +51,13 @@ public class UserDB {
         return null;
     }
 
+    public User getUserByToken(String token) {
+        for (User user : users) {
+            if (user.getUserLoginToken().equals(token)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
 }

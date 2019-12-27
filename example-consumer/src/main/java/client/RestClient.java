@@ -13,6 +13,7 @@ public class RestClient {
             URL url = new URL(apiUrl);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
+            con.setRequestProperty("Content-Type", "application/json");
 
             return prepareResponseObj(con);
 

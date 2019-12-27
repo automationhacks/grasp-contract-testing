@@ -18,10 +18,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LoginConsumerPactTest {
-    String url = "/api/auth/login";
+    String baseUrl = "/api/auth";
+    String loginUrl = String.format("%s/login", baseUrl);
+    String currentUserUrl = String.format("%s/me", baseUrl);
 
     @Rule
-    public PactProviderRule mockProvider = new PactProviderRule("TwitterProvider", "localhost", 8081, this);
+    public PactProviderRule mockProvider = new PactProviderRule("TwitterProvider", this);
 
     @Pact(consumer = "TwitterConsumer")
     public RequestResponsePact createPact(PactDslWithProvider builder) {
@@ -38,16 +40,30 @@ public class LoginConsumerPactTest {
                 .stringType("token")
                 .stringType("user_id");
 
+        DslPart currentUserBody = new PactDslJsonBody()
+                .stringType("_id")
+                .stringType("name")
+                .stringType("username")
+                .integerType("__v");
+
         return builder
                 .given("POST request to login was made")
                 .uponReceiving("POST request")
-                .path(url)
+                .path(loginUrl)
                 .headers(headers)
                 .method("POST")
                 .body(requestBody)
                 .willRespondWith()
                 .status(200)
                 .body(body)
+                .given("A user is already logged in")
+                .uponReceiving("request for current logged in user")
+                .path(currentUserUrl)
+                .headers(headers)
+                .method("GET")
+                .willRespondWith()
+                .status(200)
+                .body(currentUserBody)
                 .toPact();
     }
 
@@ -60,7 +76,15 @@ public class LoginConsumerPactTest {
                 "}";
 
         RestClient client = new RestClient();
-        Response response = client.post("http://localhost:8081" + url, requestBody);
+
+        String url = mockProvider.getUrl() + loginUrl;
+        System.out.println(String.format("Url: %s", url));
+        Response response = client.post(url, requestBody);
+        Assert.assertEquals(200, response.getStatusCode());
+
+        url = mockProvider.getUrl() + currentUserUrl;
+        System.out.println(String.format("Url: %s", url));
+        response = client.get(url);
         Assert.assertEquals(200, response.getStatusCode());
     }
 
