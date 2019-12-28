@@ -35,6 +35,7 @@ subprojects {
         testImplementation("junit:junit")
         testImplementation("au.com.dius:pact-jvm-consumer-junit:4.0.3")
         testImplementation("au.com.dius:pact-jvm-consumer-java8:4.0.3")
+        testImplementation("au.com.dius:pact-jvm-provider-junit:4.0.3")
     }
 }
 
@@ -72,18 +73,17 @@ project(':example-provider') {
         archiveVersion = '1.0.0'
     }
 
-    pact {
-        serviceProviders {
-            TwitterProvider {
-                protocol = 'http'
-                host = 'localhost'
-                port = 8082
-                path = ''
-
-                hasPactsFromPactBroker("http://localhost")
-            }
-        }
-
-    }
+//    pact {
+//        serviceProviders {
+//            TwitterProvider {
+//                protocol = 'http'
+//                host = 'localhost'
+//                port = 8082
+//                path = ''
+//
+//                hasPactsFromPactBroker("http://localhost")
+//            }
+//        }
+//    }
 }
 

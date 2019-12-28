@@ -55,12 +55,16 @@ public class LoginController {
 
     private ResponseEntity<LoginResponse> userSuccessfullyLogsIn(User user) throws UserNotLoggedInException {
         LoginResponse response;
+        response = generateTokenAndLoginUser(user);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    LoginResponse generateTokenAndLoginUser(User user) throws UserNotLoggedInException {
+        LoginResponse response;
         String token = String.valueOf(UUID.randomUUID());
 
         response = new LoginResponse(true, token, user.getUserId());
         db.setToken(user.getUserName(), token);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return response;
     }
-
-
 }

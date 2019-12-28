@@ -40,6 +40,7 @@ public class LoginConsumerPactTest {
                 .stringType("token")
                 .stringType("user_id");
 
+
         DslPart currentUserBody = new PactDslJsonBody()
                 .stringType("_id")
                 .stringType("name")
@@ -47,8 +48,8 @@ public class LoginConsumerPactTest {
                 .integerType("__v");
 
         return builder
-                .given("POST request to login was made")
-                .uponReceiving("POST request")
+                .given("")
+                .uponReceiving("request to login")
                 .path(loginUrl)
                 .headers(headers)
                 .method("POST")
@@ -56,7 +57,7 @@ public class LoginConsumerPactTest {
                 .willRespondWith()
                 .status(200)
                 .body(body)
-                .given("A user is already logged in")
+                .given("user is logged in")
                 .uponReceiving("request for current logged in user")
                 .path(currentUserUrl)
                 .headers(headers)
