@@ -3,35 +3,29 @@
     "name": "TwitterProvider"
   },
   "consumer": {
-    "name": "TwitterConsumer"
+    "name": "LoggedInTwitterConsumer"
   },
   "interactions": [
     {
-      "description": "request to login",
+      "description": "Request for current users profile",
       "request": {
-        "method": "POST",
-        "path": "/api/auth/login",
-        "headers": {
-          "Content-Type": "application/json"
-        },
-        "body": {
-          "username": "sayantan",
-          "password": "secretpwd"
-        }
+        "method": "GET",
+        "path": "/api/auth/me"
       },
       "response": {
         "status": 200,
         "headers": {
-          "Content-Type": "application/json; charset\u003dUTF-8"
+          "Content-Type": "application/json;charset\u003dUTF-8"
         },
         "body": {
-          "auth": true,
-          "user_id": "string",
-          "token": "string"
+          "__v": 100,
+          "name": "string",
+          "_id": "string",
+          "username": "string"
         },
         "matchingRules": {
           "body": {
-            "$.auth": {
+            "$._id": {
               "matchers": [
                 {
                   "match": "type"
@@ -39,7 +33,7 @@
               ],
               "combine": "AND"
             },
-            "$.token": {
+            "$.name": {
               "matchers": [
                 {
                   "match": "type"
@@ -47,21 +41,18 @@
               ],
               "combine": "AND"
             },
-            "$.user_id": {
+            "$.username": {
               "matchers": [
                 {
                   "match": "type"
                 }
               ],
               "combine": "AND"
-            }
-          },
-          "header": {
-            "Content-Type": {
+            },
+            "$.__v": {
               "matchers": [
                 {
-                  "match": "regex",
-                  "regex": "application/json(;\\s?charset\u003d[\\w\\-]+)?"
+                  "match": "integer"
                 }
               ],
               "combine": "AND"
@@ -70,20 +61,29 @@
         },
         "generators": {
           "body": {
-            "$.token": {
+            "$._id": {
               "type": "RandomString",
               "size": 20
             },
-            "$.user_id": {
+            "$.name": {
               "type": "RandomString",
               "size": 20
+            },
+            "$.username": {
+              "type": "RandomString",
+              "size": 20
+            },
+            "$.__v": {
+              "type": "RandomInt",
+              "min": 0,
+              "max": 2147483647
             }
           }
         }
       },
       "providerStates": [
         {
-          "name": ""
+          "name": "User is already logged in"
         }
       ]
     }

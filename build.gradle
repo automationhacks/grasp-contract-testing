@@ -73,17 +73,22 @@ project(':example-provider') {
         archiveVersion = '1.0.0'
     }
 
-//    pact {
-//        serviceProviders {
-//            TwitterProvider {
-//                protocol = 'http'
-//                host = 'localhost'
-//                port = 8082
-//                path = ''
-//
-//                hasPactsFromPactBroker("http://localhost")
-//            }
-//        }
-//    }
+    pact {
+        serviceProviders {
+            TwitterProvider {
+                protocol = 'http'
+                host = 'localhost'
+                port = 8082
+                path = ''
+
+                hasPactsFromPactBroker("http://localhost")
+
+//                hasPactWith('LoggedInConsumer') {
+//                    stateChangeUrl = new URL('http://localhost:8082/pactStateChange')
+//                    pactSource = file("$rootDir/pacts/LoggedInTwitterConsumer-TwitterProvider.json")
+//                }
+            }
+        }
+    }
 }
 

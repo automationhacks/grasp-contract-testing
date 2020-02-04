@@ -9,7 +9,6 @@ import au.com.dius.pact.core.model.RequestResponsePact;
 import au.com.dius.pact.core.model.annotations.Pact;
 import client.Response;
 import client.RestClient;
-import org.intellij.lang.annotations.Language;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -17,54 +16,48 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LoginConsumerPactTest {
+public class LoggedInUserPactProviderStateTest {
     String baseUrl = "/api/auth";
-    String loginUrl = String.format("%s/login", baseUrl);
+    String currentUserUrl = String.format("%s/me", baseUrl);
 
     @Rule
     public PactProviderRule mockProvider = new PactProviderRule("TwitterProvider", this);
 
-    @Pact(consumer = "TwitterConsumer")
+    @Pact(consumer = "LoggedInTwitterConsumer")
     public RequestResponsePact createPact(PactDslWithProvider builder) {
         Map<String, String> headers = new HashMap<>();
-        headers.put("Content-Type", "application/json");
+        headers.put("Content-Type", "application/json;charset=UTF-8");
 
-        String requestBody = "{\n" +
-                "  \"username\": \"sayantan\",\n" +
-                "  \"password\": \"secretpwd\"\n" +
-                "}";
+        // Define how the response for users profile looks like
+        DslPart currentUserBody = new PactDslJsonBody()
+                .stringType("_id")
+                .stringType("name")
+                .stringType("username")
+                .integerType("__v");
 
-        DslPart body = new PactDslJsonBody()
-                .booleanType("auth")
-                .stringType("token")
-                .stringType("user_id");
-
+        // Define Pact using builder
         return builder
-                .given("")
-                .uponReceiving("request to login")
-                .path(loginUrl)
-                .headers(headers)
-                .method("POST")
-                .body(requestBody)
+                .given("User is already logged in")
+                .uponReceiving("Request for current users profile")
+                .path(currentUserUrl)
+                .method("GET")
+                .headerFromProviderState("Authorization", "Bearer ${token}", "Bearer 84a29669-5d79-462c-94db-e1ec17358e0e")
                 .willRespondWith()
+                .headers(headers)
                 .status(200)
-                .body(body)
+                .body(currentUserBody)
                 .toPact();
     }
 
     @Test
     @PactVerification
     public void runTest() {
-        @Language("JSON") String requestBody = "{\n" +
-                "  \"username\": \"sayantan\",\n" +
-                "  \"password\": \"secretpwd\"\n" +
-                "}";
-
         RestClient client = new RestClient();
 
-        String url = mockProvider.getUrl() + loginUrl;
+        String url = mockProvider.getUrl() + currentUserUrl;
         System.out.println(String.format("Url: %s", url));
-        Response response = client.post(url, requestBody);
+        Response response = client.get(url);
         Assert.assertEquals(200, response.getStatusCode());
     }
 }
+
