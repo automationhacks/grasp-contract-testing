@@ -6,6 +6,8 @@ Here is a mind map about what contract testing with PACT is all about:
 
 ![Mind map](contract_testing_mindmap.png)
 
+Also the talk slides can be referred on [slideshare](https://www.slideshare.net/GauravSingh676/contract-testing-beyond-api-functional-testing-226876827)
+
 ## Step 1: Write a consumer test with JUnitRule 
 
 * Write a consumer test against a mock with expectations of how the provider should behave. 
