@@ -1,5 +1,11 @@
 # PACT JVM Example for sample twitter APIs
 
+This repo contains an e2e example of a consumer (Junit4 test) and provider as part of the contract test methodology. This code was demoed in a talk at Automation guild 2020 online conference. Watch the talk [here](https://guildconferences.com/topic/gaurav-singh-api/)
+
+Here is a mind map about what contract testing with PACT is all about:
+
+![Mind map](contract_testing_mindmap.png)
+
 ## Step 1: Write a consumer test with JUnitRule 
 
 * Write a consumer test against a mock with expectations of how the provider should behave. 
